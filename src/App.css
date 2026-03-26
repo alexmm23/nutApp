@@ -1,0 +1,153 @@
+@import './styles/variables.css';
+/*CSS RESET*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Fundamental para que el padding no rompa el 100% */
+  font-family: var(--typography-primary);
+}
+
+body,
+html {
+  width: 100%;
+  overflow-x: hidden; /* Evita que la app se mueva hacia los lados en móvil */
+}
+.hide {
+  opacity: 0;
+}
+
+.content {
+  display: grid;
+  grid-template-rows: 1fr 6fr 1fr;
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: 100%;
+  align-items: center;
+  box-sizing: border-box;
+  color: var(--text-primary);
+  background-color: var(--primary);
+  box-shadow: inset 0 -1px 0 var(--ui-divider);
+  transition:
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+  z-index: 101;
+}
+.header.no-shadow {
+  box-shadow: none;
+}
+.header h1 {
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  font-weight: 100;
+  white-space: nowrap;
+  text-align: center;
+  color: var(--bg-main);
+  transition: opacity 0.3s ease;
+}
+.logo {
+  width: 64px;
+  aspect-ratio: 1/1;
+  margin-left: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu-icon-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  z-index: 100;
+}
+.menu-icon {
+  stroke: var(--bg-main);
+  aspect-ratio: 1/1;
+  width: 32px;
+  transition: all ease 0.3s;
+}
+.menu-icon:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.menu-item {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.menu-container {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 100vw;
+  height: 85vh;
+  background-color: var(--primary);
+  border-bottom: 1px solid var(--ui-divider);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  padding: 16px 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+.menu-container.is-open {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+.menu-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.menu-container ul li {
+  padding: var(--padding-md) var(--padding-lg);
+  color: var(--bg-main);
+  font-size: 18px;
+  text-align: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.menu-container ul li:hover {
+  cursor: pointer;
+}
+.menu-container a {
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+  transition: all ease 0.3s;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+.menu-container a:hover {
+  transform: scale(1.1);
+  color: var(--ui-divider);
+}
+
+.menu-container.is-open .menu-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 1px 0 var(--ui-divider);
+  color: var(--primary);
+}
