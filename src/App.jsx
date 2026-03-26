@@ -1,19 +1,20 @@
 import './App.css'
-import Header from './components/Header.jsx'
+import Header from './components/Header'
+import Home from './views/Home'
+import Footer from './components/Footer'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {
   return (
-    <>
+    <BrowserRouter>
       <div className="content">
         <Header />
-        <main>
-          <h1>NutApp</h1>
-        </main>
-        <footer className="footer">
-          <span>Designed by Alejandro Montes</span>
-        </footer>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+        <Footer />
       </div>
-    </>
+    </BrowserRouter>
   )
 }
 
