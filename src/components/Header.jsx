@@ -6,16 +6,17 @@ import {
   ShoppingBasket,
   LogOut,
 } from 'lucide-react'
+import { NavLink } from 'react-router-dom'
 import DietIcon from './DietIcon.jsx'
 import { useState } from 'react'
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const menuItems = [
-    { name: 'Inicio', link: '#', icon: House },
-    { name: 'Mi perfil', link: '#', icon: User },
-    { name: 'Dieta Semanal', link: '#', icon: DietIcon },
-    { name: 'Lista de compras', link: '#', icon: ShoppingBasket },
-    { name: 'Cerrar sesión', link: '#', icon: LogOut },
+    { name: 'Inicio', link: '/', icon: House },
+    { name: 'Mi perfil', link: '/profile', icon: User },
+    { name: 'Dieta Semanal', link: '/weekly-diet', icon: DietIcon },
+    { name: 'Lista de compras', link: '/shopping-list', icon: ShoppingBasket },
+    { name: 'Cerrar sesión', link: '/logout', icon: LogOut },
   ]
   return (
     <header className={`header ${!isMenuOpen ? 'no-shadow' : ''}`}>
@@ -36,10 +37,14 @@ export default function Header() {
                 className="menu-item"
                 style={{ transitionDelay: `${index * 0.1}s` }}
               >
-                <a href={item.link}>
+                <NavLink
+                  to={item.link}
+                  className={({ isActive }) => (isActive ? 'active-link' : '')}
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   <item.icon size={32} />
                   {item.name}
-                </a>
+                </NavLink>
               </li>
             ))}
           </ul>
