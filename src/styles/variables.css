@@ -1,0 +1,38 @@
+:root {
+  --bg-main: #ffffff;
+  --bg-card: #f4f4f4;
+  --ui-divider: #e0e0e0;
+
+  /*Typography*/
+  --text-primary: #111111;
+  --text-secondary: #666666;
+  --text-teertiary: #999999;
+
+  --accent-premium: #8d7b68;
+
+  /* States */
+  --status-success: #a3b18a;
+  --status-error: #c97b7b;
+
+  /* Border-radius */
+  --radius-lg: 24px;
+  --radius-md: 12px;
+  --radius-sm: 6px;
+
+  [data-theme='dark'] {
+    --bg-main: #111111;
+    --bg-card: #1a1a1a;
+    --ui-divider: #333333;
+
+    /*Typography*/
+    --text-primary: #f4f4f4;
+    --text-secondary: #a0a0a0;
+    --text-teertiary: #999999;
+
+    --accent-premium: #8d7b68;
+
+    /* States */
+    --status-success: #a3b18a;
+    --status-error: #c97b7b;
+  }
+}
