@@ -1,4 +1,11 @@
-import { Menu, Feather, House, User } from 'lucide-react'
+import {
+  Menu,
+  Feather,
+  House,
+  User,
+  ShoppingBasket,
+  LogOut,
+} from 'lucide-react'
 import DietIcon from './DietIcon.jsx'
 import { useState } from 'react'
 export default function Header() {
@@ -7,8 +14,8 @@ export default function Header() {
     { name: 'Inicio', link: '#', icon: House },
     { name: 'Mi perfil', link: '#', icon: User },
     { name: 'Dieta Semanal', link: '#', icon: DietIcon },
-    { name: 'Lista de compras', link: '#', icon: 'shopping-cart' },
-    { name: 'Cerrar sesión', link: '#', icon: 'log-out' },
+    { name: 'Lista de compras', link: '#', icon: ShoppingBasket },
+    { name: 'Cerrar sesión', link: '#', icon: LogOut },
   ]
   return (
     <header className={`header ${!isMenuOpen ? 'no-shadow' : ''}`}>
