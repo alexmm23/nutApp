@@ -1,0 +1,23 @@
+.family-carrousel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  overflow-x: auto;
+  justify-content: flex-start;
+  width: 100%;
+}
+.chip {
+  background-color: var(--accent-premium);
+  border-radius: var(--radius-lg);
+  width: max-content;
+  padding: var(--padding-sm) var(--padding-md);
+  color: var(--bg-main);
+  font-size: var(--font-size-sm);
+}
+.family-members {
+  display: flex;
+  gap: var(--spacing-lg);
+  overflow-x: auto;
+  padding-bottom: 8px;
+}

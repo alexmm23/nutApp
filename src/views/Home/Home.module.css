@@ -1,0 +1,9 @@
+.home-content {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--spacing-lg);
+  gap: var(--spacing-lg);
+  width: 80vw;
+  margin: 0 auto;
+  align-items: center;
+}

@@ -30,6 +30,10 @@
   --padding-md: 18px;
   --padding-sm: 6px;
 
+  --spacing-lg: 24px;
+  --spacing-md: 18px;
+  --spacing-sm: 6px;
+
   [data-theme='dark'] {
     --bg-main: #111111;
     --bg-card: #1a1a1a;

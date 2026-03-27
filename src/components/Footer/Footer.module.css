@@ -4,4 +4,5 @@
   align-items: center;
   box-shadow: inset 0 1px 0 var(--ui-divider);
   color: var(--primary);
+  height: 90px;
 }
