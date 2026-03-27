@@ -47,11 +47,11 @@ export default function Home() {
         ]}
       />
 
-      <section>
+      <button className={styles['weekly-menu-button']}>
         <Link to="/weekly-diet">Ver el menú completo</Link>
-      </section>
+      </button>
 
-      <button>
+      <button className={styles['upload-button']}>
         <Upload size={24} />
       </button>
     </main>
