@@ -1,0 +1,21 @@
+@import './styles/variables.css';
+@import './App.css';
+/* CSS RESET & GLOBAL */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--typography-primary);
+}
+
+body,
+html {
+  width: 100%;
+  overflow-x: hidden;
+  background-color: var(--bg-main);
+}
+
+/* Clases de utilidad globales */
+.hide {
+  opacity: 0;
+}

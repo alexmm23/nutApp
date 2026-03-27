@@ -1,8 +1,8 @@
-import './App.css'
-import Header from './components/Header'
-import Home from './views/Home'
-import Footer from './components/Footer'
-import NotFound from './views/NotFound'
+import './index.css'
+import Header from './components/Header/Header'
+import Home from './views/Home/Home'
+import Footer from './components/Footer/Footer'
+import NotFound from './views/NotFound/NotFound'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {

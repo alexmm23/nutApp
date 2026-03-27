@@ -1,0 +1,7 @@
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 1px 0 var(--ui-divider);
+  color: var(--primary);
+}
