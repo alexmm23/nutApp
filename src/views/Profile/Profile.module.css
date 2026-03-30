@@ -35,7 +35,27 @@
   aspect-ratio: 1/1;
   width: 200px;
   border-radius: 100px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
 }
+.userImgHeader img:hover {
+  opacity: 0.8;
+}
+.userImgHeader img:hover + .editIcon {
+  opacity: 0.6;
+}
+
+.editIcon {
+  position: absolute;
+  top: 130px;
+  left: 50%;
+  translate: -50%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: -999;
+  color: var(--text-secondary);
+}
+
 .socialIcons {
   display: flex;
   width: 100vw;
@@ -57,4 +77,35 @@
   align-items: center;
   gap: 20px;
   width: 70%;
+}
+
+.btnDanger {
+  background-color: var(--status-error);
+  border-radius: var(--radius-md);
+  padding: var(--padding-md) var(--padding-lg);
+  color: var(--bg-main);
+  border: none;
+  width: 100%;
+  margin-top: var(--spacing-lg);
+  cursor: pointer;
+}
+
+.btnDanger:hover {
+  background-color: var(--status-error);
+  opacity: 0.8;
+}
+
+div[role='button'] {
+  border: none;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+div[role='button']:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
 }

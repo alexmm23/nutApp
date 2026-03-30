@@ -1,4 +1,4 @@
-import { Users, Share2 } from 'lucide-react'
+import { Users, Share2, Pencil } from 'lucide-react'
 import styles from './Profile.module.css'
 import { useState } from 'react'
 import FormInput from '../../components/FormInput/FormInput'
@@ -17,9 +17,17 @@ export default function Profile() {
             src="https://blocks.astratic.com/img/user-img-small.png"
             alt="user profile image"
           />
+          <div className={styles.editIcon}>
+            <Pencil size={16} />
+          </div>
+
           <div className={styles.socialIcons}>
-            <Users />
-            <Share2 />
+            <div role="button" aria-label="Follow">
+              <Users />
+            </div>
+            <div role="button" aria-label="Share">
+              <Share2 />
+            </div>
           </div>
         </div>
       </section>
