@@ -1,0 +1,66 @@
+.modal {
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 0;
+  width: 90%;
+  max-width: 500px;
+  background-color: var(--bg-main);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  margin: 100px auto;
+
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    display 0.3s allow-discrete;
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.modal[open] {
+  opacity: 1;
+  transform: scale(1);
+}
+@starting-style {
+  .modal[open] {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.modal::backdrop {
+  background-color: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(0);
+  transition:
+    background-color 0.3s ease,
+    backdrop-filter 0.3s ease,
+    display 0.3s allow-discrete;
+}
+@starting-style {
+  .modal[open]::backdrop {
+    background-color: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0);
+  }
+}
+
+.modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--padding-md) var(--padding-lg);
+  border-bottom: 1px solid var(--ui-divider);
+}
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+.content {
+  padding: var(--padding-lg);
+}

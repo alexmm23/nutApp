@@ -95,17 +95,105 @@
   opacity: 0.8;
 }
 
-div[role='button'] {
+.socialIcons button {
+  position: relative;
   border: none;
   cursor: pointer;
   transition:
     transform 0.2s ease,
     opacity 0.2s ease;
+  background-color: transparent;
   backface-visibility: hidden;
   -webkit-font-smoothing: subpixel-antialiased;
 }
 
-div[role='button']:hover {
+.socialIcons button::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+
+  background-color: var(--primary);
+  color: var(--bg-main);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  white-space: nowrap;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.socialIcons button::before {
+  content: '';
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  border: 6px solid transparent;
+  border-top-color: var(--primary);
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.socialIcons button:hover::after {
+  opacity: 1;
+}
+
+.socialIcons button:hover::before,
+.socialIcons button:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+.socialIcons button:hover {
   opacity: 0.8;
   transform: scale(1.05);
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 70vh;
+}
+.headerContainer {
+  width: 100%;
+}
+.headerContainer img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: var(--padding-lg);
+}
+.familyMembers {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.memberList {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.btnPrimary {
+  background-color: var(--accent-premium);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.btnPrimary:hover {
+  background-color: var(--accent-premium);
+  opacity: 0.8;
 }
