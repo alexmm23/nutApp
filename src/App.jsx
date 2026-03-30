@@ -5,6 +5,7 @@ import Footer from './components/Footer/Footer'
 import NotFound from './views/NotFound/NotFound'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import WeeklyDiet from './views/WeeklyDiet/WeeklyDiet'
+import Profile from './views/Profile/Profile'
 function App() {
   return (
     <BrowserRouter>
@@ -12,6 +13,7 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/perfil" element={<Profile />} />
           <Route path="/weekly-diet" element={<WeeklyDiet />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
