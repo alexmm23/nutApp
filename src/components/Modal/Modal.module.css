@@ -4,9 +4,13 @@
   padding: 0;
   width: 90%;
   max-width: 500px;
+  max-height: calc(100dvh - 2rem);
   background-color: var(--bg-main);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  margin: 100px auto;
+  margin: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
   transition:
     opacity 0.3s ease,
@@ -54,6 +58,11 @@
   padding: var(--padding-md) var(--padding-lg);
   border-bottom: 1px solid var(--ui-divider);
 }
+
+.body {
+  overflow-y: auto;
+}
+
 .closeButton {
   background: none;
   border: none;
