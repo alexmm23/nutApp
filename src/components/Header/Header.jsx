@@ -11,7 +11,7 @@ export default function Header() {
     { name: 'Inicio', link: '/', icon: House },
     { name: 'Mi perfil', link: '/perfil', icon: User },
     { name: 'Dieta Semanal', link: '/weekly-diet', icon: DietIcon },
-    { name: 'Lista de compras', link: '/compras', icon: Calendar },
+    { name: 'Lista de compras', link: '/shopping-list', icon: Calendar },
     { name: 'Cerrar sesión', link: '/logout', icon: User },
   ]
 

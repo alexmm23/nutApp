@@ -1,5 +1,8 @@
 import styles from './WeeklyDiet.module.css'
+import { usePageTitle } from '../../hooks/usePageTitle'
+
 export default function WeeklyDiet() {
+  usePageTitle('Dieta Semanal - NutApp')
   return (
     <main className={styles.container}>
       <h1>

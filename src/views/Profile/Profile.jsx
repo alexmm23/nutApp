@@ -5,7 +5,10 @@ import FormInput from '../../components/FormInput/FormInput'
 import Modal from '../../components/Modal/Modal'
 import Member from '../../components/Member/Member'
 import { toast } from 'sonner'
+import { usePageTitle } from '../../hooks/usePageTitle'
+
 export default function Profile() {
+  usePageTitle('Mi Perfil - NutApp')
   //TODO: Reemplazar con datos reales del usuario
   const [userData, setUserData] = useState({
     name: 'Juan Pérez',

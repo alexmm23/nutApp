@@ -6,6 +6,7 @@ import NotFound from './views/NotFound/NotFound'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import WeeklyDiet from './views/WeeklyDiet/WeeklyDiet'
 import Profile from './views/Profile/Profile'
+import ShoppingList from './views/ShoppingList/ShoppingList'
 import { Toaster } from 'sonner'
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/perfil" element={<Profile />} />
             <Route path="/weekly-diet" element={<WeeklyDiet />} />
+            <Route path="/shopping-list" element={<ShoppingList />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />

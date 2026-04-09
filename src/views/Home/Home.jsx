@@ -3,7 +3,10 @@ import FoodCard from '../../components/FoodCard/FoodCard'
 import styles from './Home.module.css'
 import { Upload } from 'lucide-react'
 import FamilyCarrousel from '../../components/FamilyCarrousel/FamilyCarrousel'
+import { usePageTitle } from '../../hooks/usePageTitle'
+
 export default function Home() {
+  usePageTitle('NutApp - Nutrición en Familia')
   return (
     <main className={styles['home-content']}>
       {/* <h1 className={styles['head-text']}>NutApp</h1> */}
