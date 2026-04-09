@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 import FormInput from '../../components/FormInput/FormInput'
 import Modal from '../../components/Modal/Modal'
 import Member from '../../components/Member/Member'
+import { toast } from 'sonner'
 export default function Profile() {
   //TODO: Reemplazar con datos reales del usuario
   const [userData, setUserData] = useState({
@@ -33,8 +34,13 @@ export default function Profile() {
     setModalContent('share')
     modalRef.current.showModal()
   }
-  const handleIconClick = () => {
-    navigator.clipboard.writeText(userData.familyCode)
+  const handleIconClick = async () => {
+    try {
+      await navigator.clipboard.writeText(userData.familyCode)
+      toast.success('Código de familia copiado al portapapeles')
+    } catch {
+      toast.error('No se pudo copiar el código')
+    }
   }
   const handleClickJoin = () => {
     setModalContent('join')

@@ -6,20 +6,29 @@ import NotFound from './views/NotFound/NotFound'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import WeeklyDiet from './views/WeeklyDiet/WeeklyDiet'
 import Profile from './views/Profile/Profile'
+import { Toaster } from 'sonner'
 function App() {
   return (
-    <BrowserRouter>
-      <div className="content">
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/perfil" element={<Profile />} />
-          <Route path="/weekly-diet" element={<WeeklyDiet />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Footer />
-      </div>
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            className: 'custom-toast',
+          }}
+        />
+        <div className="content">
+          <Header />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/perfil" element={<Profile />} />
+            <Route path="/weekly-diet" element={<WeeklyDiet />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </>
   )
 }
 

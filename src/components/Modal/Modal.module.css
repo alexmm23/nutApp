@@ -1,3 +1,15 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 900;
+}
+
 .modal {
   border: none;
   border-radius: var(--radius-lg);
@@ -7,7 +19,6 @@
   max-height: calc(100dvh - 2rem);
   background-color: var(--bg-main);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  margin: auto;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -15,40 +26,10 @@
   transition:
     opacity 0.3s ease,
     transform 0.3s ease,
-    display 0.3s allow-discrete;
+    opacity 0.3s ease;
   opacity: 0;
   transform: scale(0.9);
-}
-
-.modal[open] {
-  opacity: 1;
-  transform: scale(1);
-}
-@starting-style {
-  .modal[open] {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-}
-
-.modal::backdrop {
-  background-color: rgba(0, 0, 0, 0);
-  backdrop-filter: blur(0);
-  transition:
-    background-color 0.3s ease,
-    backdrop-filter 0.3s ease,
-    display 0.3s allow-discrete;
-}
-@starting-style {
-  .modal[open]::backdrop {
-    background-color: rgba(0, 0, 0, 0);
-    backdrop-filter: blur(0);
-  }
-}
-
-.modal::backdrop {
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
+  animation: modalIn 0.2s ease forwards;
 }
 
 .header {
@@ -72,4 +53,15 @@
 }
 .content {
   padding: var(--padding-lg);
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
