@@ -45,6 +45,15 @@
   z-index: 100;
 }
 
+.rightContainer {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 16px;
+  position: relative;
+}
+
 .menuIcon {
   stroke: var(--bg-main);
   width: 32px;
@@ -60,18 +69,18 @@
 /* --- NAVEGACIÓN / MENÚ --- */
 
 .menuContainer {
-  position: absolute;
-  top: 60px;
+  position: fixed;
+  top: 90px;
+  left: 0;
   right: 0;
-  width: 100vw;
-  height: 85vh;
+  height: calc(100vh - 90px);
   background-color: var(--primary);
   border-bottom: 1px solid var(--ui-divider);
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  border-radius: 0;
   padding: 16px 0;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(10px);
+  transform: translateY(-10px);
   transition: all 0.3s ease;
 }
 

@@ -1,0 +1,76 @@
+.authContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 102;
+}
+
+.userInfo {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--bg-main);
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.email {
+  font-size: 14px;
+  white-space: nowrap;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.button {
+  padding: 8px 16px;
+  background-color: var(--bg-main);
+  color: var(--primary);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.button:hover {
+  background-color: var(--ui-divider);
+  transform: scale(1.05);
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.iconButton:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}
+
+.signOutButton {
+  padding: 6px 12px;
+  font-size: 12px;
+  background-color: transparent;
+  color: var(--bg-main);
+  border: 1px solid var(--bg-main);
+}
+
+.signOutButton:hover {
+  background-color: var(--bg-main);
+  color: var(--primary);
+}

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Menu, Feather, House, User, Calendar, Apple } from 'lucide-react'
 import styles from './Header.module.css' // Importación del módulo
+import Auth from '../Auth/Auth'
 import DietIcon from '../DietIcon/DietIcon'
 
 export default function Header() {
@@ -23,36 +24,39 @@ export default function Header() {
 
       <h1 className={styles.title}>TU MENÚ DE HOY</h1>
 
-      <div className={styles.menuIconContainer}>
-        <Menu
-          className={styles.menuIcon}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        />
+      <div className={styles.rightContainer}>
+        <Auth />
+        <div className={styles.menuIconContainer}>
+          <Menu
+            className={styles.menuIcon}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          />
 
-        <nav
-          className={`${styles.menuContainer} ${isMenuOpen ? styles.isOpen : ''}`}
-        >
-          <ul className={styles.menuList}>
-            {menuItems.map((item, index) => (
-              <li
-                key={index}
-                className={styles.menuItem}
-                style={{
-                  transitionDelay: isMenuOpen ? `${index * 0.1}s` : '0s',
-                }}
-              >
-                <NavLink
-                  to={item.link}
-                  className={styles.menuLink}
-                  onClick={() => setIsMenuOpen(false)}
+          <nav
+            className={`${styles.menuContainer} ${isMenuOpen ? styles.isOpen : ''}`}
+          >
+            <ul className={styles.menuList}>
+              {menuItems.map((item, index) => (
+                <li
+                  key={index}
+                  className={styles.menuItem}
+                  style={{
+                    transitionDelay: isMenuOpen ? `${index * 0.1}s` : '0s',
+                  }}
                 >
-                  <item.icon size={24} />
-                  {item.name}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
+                  <NavLink
+                    to={item.link}
+                    className={styles.menuLink}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <item.icon size={24} />
+                    {item.name}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </div>
     </header>
   )
