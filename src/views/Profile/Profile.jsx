@@ -1,6 +1,8 @@
 import { Users, Share2, Pencil, Copy } from 'lucide-react'
 import styles from './Profile.module.css'
 import { useState, useRef } from 'react'
+import useSupabaseAuth from '../../hooks/useSupabaseAuth'
+import { supabase } from '../../lib/supabaseClient'
 import FormInput from '../../components/FormInput/FormInput'
 import Modal from '../../components/Modal/Modal'
 import Member from '../../components/Member/Member'
@@ -9,12 +11,7 @@ import { usePageTitle } from '../../hooks/usePageTitle'
 
 export default function Profile() {
   usePageTitle('Mi Perfil - NutApp')
-  //TODO: Reemplazar con datos reales del usuario
-  const [userData, setUserData] = useState({
-    name: 'Juan Pérez',
-    email: 'juan.perez@example.com',
-    familyCode: 'ABC123',
-  })
+  const { user, profile } = useSupabaseAuth()
   const [newFamilyCode, setNewFamilyCode] = useState('')
   const [modalContent, setModalContent] = useState('share') // 'share' o 'join'
   // TODO: Reemplazar con datos reales de miembros de la familia
@@ -32,6 +29,38 @@ export default function Profile() {
   ]
 
   const modalRef = useRef(null)
+
+  const identity = user?.identities?.[0]?.identity_data
+  const sessionAvatar =
+    user?.user_metadata?.avatar_url ||
+    user?.user_metadata?.picture ||
+    identity?.avatar_url ||
+    identity?.picture ||
+    ''
+
+  const sessionName =
+    user?.user_metadata?.full_name ||
+    user?.user_metadata?.name ||
+    user?.user_metadata?.given_name ||
+    (user?.email ? user.email.split('@')[0] : '')
+
+  const sessionEmail = user?.email || user?.user_metadata?.email || ''
+
+  const userData = {
+    name: profile?.name || sessionName,
+    email: profile?.email || sessionEmail,
+    familyCode:
+      profile?.familyCode ||
+      profile?.family_code ||
+      profile?.familyId ||
+      user?.user_metadata?.familyCode ||
+      user?.user_metadata?.family_code ||
+      user?.user_metadata?.family ||
+      '',
+    avatar: profile?.avatarUrl || sessionAvatar,
+    profileId: profile?.profileId || null,
+    familyId: profile?.familyId || null,
+  }
 
   const handleClickShare = () => {
     setModalContent('share')
@@ -53,14 +82,27 @@ export default function Profile() {
     console.log('Código de familia ingresado:', newFamilyCode)
   }
 
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut()
+    if (error) {
+      console.error('Error signing out:', error.message)
+      return
+    }
+    // optional: reload or navigate to home
+    window.location.href = '/'
+  }
+
   return (
     <main className={styles.content}>
       <section className={styles.profileHeader}>
         <div className={styles.imgProfileBackground}></div>
         <div className={styles.userImgHeader}>
           <img
-            src="https://blocks.astratic.com/img/user-img-small.png"
-            alt="user profile image"
+            src={
+              userData.avatar ||
+              'https://blocks.astratic.com/img/user-img-small.png'
+            }
+            alt={userData.name || 'Usuario'}
           />
           <div className={styles.editIcon}>
             <Pencil size={16} />
@@ -90,24 +132,25 @@ export default function Profile() {
           type="text"
           inputName="name"
           value={userData.name}
-          onChange={(e) => setUserData({ ...userData, name: e.target.value })}
+          readOnly={true}
         />
         <FormInput
           label="E-mail"
           type="email"
           inputName="email"
           value={userData.email}
-          onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+          readOnly={true}
         />
         <FormInput
-          label="Contraseña"
-          type="password"
-          inputName="password"
-          value="********"
-          onChange={() => {}}
-          disabled="true"
+          label="Código de familia"
+          type="text"
+          inputName="familyCode"
+          value={userData.familyCode}
+          readOnly={true}
         />
-        <button className={styles.btnDanger}>Cerrar sesión</button>
+        <button className={styles.btnDanger} onClick={handleSignOut}>
+          Cerrar sesión
+        </button>
       </section>
       <Modal
         ref={modalRef}
