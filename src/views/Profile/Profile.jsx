@@ -9,10 +9,23 @@ import Member from '../../components/Member/Member'
 import { toast } from 'sonner'
 import { usePageTitle } from '../../hooks/usePageTitle'
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8080'
+const FAMILY_CODE_ENDPOINT =
+  import.meta.env.VITE_FAMILY_CODE_ENDPOINT || `${BACKEND_URL}/families/code`
+const FAMILY_JOIN_ENDPOINT =
+  import.meta.env.VITE_FAMILY_JOIN_ENDPOINT || `${BACKEND_URL}/families/join`
+const FAMILY_LEAVE_ENDPOINT =
+  import.meta.env.VITE_FAMILY_LEAVE_ENDPOINT || `${BACKEND_URL}/families/leave`
+
 export default function Profile() {
   usePageTitle('Mi Perfil - NutApp')
   const { user, profile } = useSupabaseAuth()
   const [newFamilyCode, setNewFamilyCode] = useState('')
+  const [shareCode, setShareCode] = useState('')
+  const [shareLoading, setShareLoading] = useState(false)
+  const [shareError, setShareError] = useState('')
+  const [joinLoading, setJoinLoading] = useState(false)
+  const [joinError, setJoinError] = useState('')
   const [modalContent, setModalContent] = useState('share') // 'share' o 'join'
   // TODO: Reemplazar con datos reales de miembros de la familia
   const members = [
@@ -50,8 +63,9 @@ export default function Profile() {
     name: profile?.name || sessionName,
     email: profile?.email || sessionEmail,
     familyCode:
-      profile?.familyCode ||
+      shareCode ||
       profile?.family_code ||
+      profile?.data?.family_code ||
       profile?.familyId ||
       user?.user_metadata?.familyCode ||
       user?.user_metadata?.family_code ||
@@ -62,13 +76,213 @@ export default function Profile() {
     familyId: profile?.familyId || null,
   }
 
-  const handleClickShare = () => {
+  const persistSharedCode = (code) => {
+    setShareCode(code)
+
+    if (!profile || !user) return
+
+    const cacheKey = `nutapp.profile:${user.id}`
+
+    try {
+      const cachedProfile = window.localStorage.getItem(cacheKey)
+      if (!cachedProfile) return
+
+      const parsedProfile = JSON.parse(cachedProfile)
+      const nextProfile = {
+        ...parsedProfile,
+        familyCode: code,
+        data: {
+          ...(parsedProfile.data || {}),
+          family_code: code,
+        },
+      }
+
+      window.localStorage.setItem(cacheKey, JSON.stringify(nextProfile))
+    } catch (error) {
+      console.error('Error caching family code:', error.message)
+    }
+  }
+
+  const joinFamily = async (code) => {
+    setJoinLoading(true)
+    setJoinError('')
+
+    try {
+      const resp = await fetch(FAMILY_JOIN_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code,
+          profile_id: profile?.profileId,
+          google_id: user?.id,
+        }),
+      })
+
+      if (!resp.ok) {
+        const text = await resp.text().catch(() => '')
+        throw new Error(text || `Backend join failed: ${resp.status}`)
+      }
+
+      const data = await resp.json()
+      const generatedCode =
+        data.family_code || data.code || data.data?.family_code
+      const familyId = data.family_id || data.data?.family_id || null
+
+      if (generatedCode) persistSharedCode(generatedCode)
+
+      try {
+        const cacheKey = `nutapp.profile:${user.id}`
+        const cached = window.localStorage.getItem(cacheKey)
+        if (cached) {
+          const p = JSON.parse(cached)
+          p.familyCode = generatedCode || p.familyCode
+          p.familyId = familyId || p.familyId
+          p.data = {
+            ...(p.data || {}),
+            family_code: generatedCode || p.data?.family_code,
+          }
+          window.localStorage.setItem(cacheKey, JSON.stringify(p))
+        }
+      } catch (e) {
+        console.error(
+          'Error updating cached profile after joining family:',
+          e.message
+        )
+      }
+
+      toast.success('Te uniste a la familia correctamente')
+      modalRef.current.close()
+      return true
+    } catch (err) {
+      const msg = err?.message || 'Error al unirse a la familia'
+      setJoinError(msg)
+      toast.error(msg)
+      return false
+    } finally {
+      setJoinLoading(false)
+    }
+  }
+
+  const leaveAndJoin = async (code) => {
+    setJoinLoading(true)
+    setJoinError('')
+    try {
+      if (profile?.familyId) {
+        const leaveResp = await fetch(FAMILY_LEAVE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            profile_id: profile.profileId,
+            family_id: profile.familyId,
+          }),
+        })
+
+        if (!leaveResp.ok) {
+          const text = await leaveResp.text().catch(() => '')
+          throw new Error(text || `Backend leave failed: ${leaveResp.status}`)
+        }
+      }
+
+      const ok = await joinFamily(code)
+      return ok
+    } catch (err) {
+      const msg = err?.message || 'Error al salir y unirse a la nueva familia'
+      setJoinError(msg)
+      toast.error(msg)
+      return false
+    } finally {
+      setJoinLoading(false)
+    }
+  }
+
+  const requestFamilyCode = async () => {
+    const currentCode = userData.familyCode
+    if (currentCode) {
+      setShareCode(currentCode)
+      setShareError('')
+      return currentCode
+    }
+
+    if (!profile?.profileId && !user?.id) {
+      const msg = 'No se encontró información del perfil para generar el código'
+      setShareError(msg)
+      toast.error(msg)
+      return ''
+    }
+
+    setShareLoading(true)
+    setShareError('')
+
+    try {
+      const response = await fetch(FAMILY_CODE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          profile_id: profile?.profileId,
+          family_id: profile?.familyId,
+          google_id: user?.id,
+          name: userData.name,
+          email: userData.email,
+          avatar_url: userData.avatar,
+        }),
+      })
+
+      if (!response.ok) {
+        const text = await response.text().catch(() => '')
+        throw new Error(
+          text || `Backend responded with status ${response.status}`
+        )
+      }
+
+      const data = await response.json()
+      const generatedCode =
+        data.family_code || data.code || data.data?.family_code
+
+      if (!generatedCode) {
+        throw new Error('El backend no devolvió un código de familia')
+      }
+
+      persistSharedCode(generatedCode)
+      return generatedCode
+    } catch (error) {
+      const message = error.message || 'No se pudo generar el código de familia'
+      setShareError(message)
+      toast.error(message)
+      return ''
+    } finally {
+      setShareLoading(false)
+    }
+  }
+
+  const handleClickShare = async () => {
     setModalContent('share')
-    modalRef.current.showModal()
+    modalRef.current?.showModal()
+
+    const currentCode = userData.familyCode
+    if (currentCode) {
+      setShareCode(currentCode)
+      setShareError('')
+      return
+    }
+
+    await requestFamilyCode()
+  }
+
+  const handleConfirmLeaveAndJoin = async () => {
+    const code = newFamilyCode.trim()
+    if (!code) {
+      setJoinError('Introduce un código válido')
+      return
+    }
+
+    await leaveAndJoin(code)
   }
   const handleIconClick = async () => {
     try {
-      await navigator.clipboard.writeText(userData.familyCode)
+      const codeToCopy = userData.familyCode
+      if (!codeToCopy) return
+
+      await navigator.clipboard.writeText(codeToCopy)
       toast.success('Código de familia copiado al portapapeles')
     } catch {
       toast.error('No se pudo copiar el código')
@@ -78,8 +292,19 @@ export default function Profile() {
     setModalContent('join')
     modalRef.current.showModal()
   }
-  const handleJoinFamily = () => {
-    console.log('Código de familia ingresado:', newFamilyCode)
+  const handleJoinFamily = async () => {
+    const code = newFamilyCode.trim()
+    if (!code) {
+      setJoinError('Introduce un código válido')
+      return
+    }
+
+    if (userData.familyCode) {
+      setModalContent('confirm-join')
+      return
+    }
+
+    await joinFamily(code)
   }
 
   const handleSignOut = async () => {
@@ -88,7 +313,6 @@ export default function Profile() {
       console.error('Error signing out:', error.message)
       return
     }
-    // optional: reload or navigate to home
     window.location.href = '/'
   }
 
@@ -141,13 +365,13 @@ export default function Profile() {
           value={userData.email}
           readOnly={true}
         />
-        <FormInput
+        {/* <FormInput
           label="Código de familia"
           type="text"
           inputName="familyCode"
           value={userData.familyCode}
           readOnly={true}
-        />
+        /> */}
         <button className={styles.btnDanger} onClick={handleSignOut}>
           Cerrar sesión
         </button>
@@ -171,15 +395,30 @@ export default function Profile() {
             <div className={styles.modalBody}>
               <section className={styles.shareCode}>
                 <h4>Compartir código</h4>
-                <FormInput
-                  label="Código de familia"
-                  type="text"
-                  value={userData.familyCode}
-                  readOnly={true}
-                  Icon={Copy}
-                  onIconClick={handleIconClick}
-                  inputName="familyCode"
-                />
+                {shareLoading ? (
+                  <p>Generando código de familia...</p>
+                ) : shareError ? (
+                  <>
+                    <p>{shareError}</p>
+                    <button
+                      type="button"
+                      className={styles.btnPrimary}
+                      onClick={requestFamilyCode}
+                    >
+                      Reintentar
+                    </button>
+                  </>
+                ) : (
+                  <FormInput
+                    label="Código de familia"
+                    type="text"
+                    value={userData.familyCode}
+                    readOnly={true}
+                    Icon={Copy}
+                    onIconClick={handleIconClick}
+                    inputName="familyCode"
+                  />
+                )}
               </section>
               <section className={styles.familyMembers}>
                 <h4>Miembros de la familia</h4>
@@ -200,6 +439,31 @@ export default function Profile() {
               </section>
             </div>
           </div>
+        ) : modalContent === 'confirm-join' ? (
+          <div className={styles.modalBody}>
+            <p>
+              Ya perteneces a una familia. ¿Estás seguro que deseas salir de tu
+              familia actual y unirte a la nueva con código{' '}
+              <strong>{newFamilyCode}</strong>?
+            </p>
+            {joinError && <p className={styles.errorText}>{joinError}</p>}
+            <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+              <button
+                className={styles.btnSecondary}
+                onClick={() => setModalContent('join')}
+                disabled={joinLoading}
+              >
+                Cancelar
+              </button>
+              <button
+                className={styles.btnPrimary}
+                onClick={handleConfirmLeaveAndJoin}
+                disabled={joinLoading}
+              >
+                {joinLoading ? 'Procesando...' : 'Salir y unirme'}
+              </button>
+            </div>
+          </div>
         ) : (
           <div className={styles.modalBody}>
             <FormInput
@@ -210,8 +474,13 @@ export default function Profile() {
               placeholder=" "
               inputName="joinFamilyCode"
             />
-            <button className={styles.btnPrimary} onClick={handleJoinFamily}>
-              Unirse
+            {joinError && <p className={styles.errorText}>{joinError}</p>}
+            <button
+              className={styles.btnPrimary}
+              onClick={handleJoinFamily}
+              disabled={joinLoading}
+            >
+              {joinLoading ? 'Procesando...' : 'Unirse'}
             </button>
           </div>
         )}
