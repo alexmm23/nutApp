@@ -27,13 +27,19 @@
 }
 
 .upload-button {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
+  position: fixed;
+  bottom: calc(
+    20px + var(--floating-offset, 0px) + env(safe-area-inset-bottom, 0px)
+  );
+  right: calc(20px + env(safe-area-inset-right, 0px));
   background-color: var(--accent-premium);
   border-radius: 100px;
   padding: var(--padding-md);
   border: none;
   cursor: pointer;
   z-index: 99;
+  transition:
+    bottom 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 200ms ease;
+  will-change: bottom, transform;
 }
